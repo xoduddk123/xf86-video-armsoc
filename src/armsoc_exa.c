@@ -26,6 +26,9 @@
  *    Rob Clark <rob@ti.com>
  */
 
+#include <ump/ump.h>
+#include <ump/ump_ref_drv.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -334,6 +337,10 @@ ARMSOCPrepareAccess(PixmapPtr pPixmap, int index)
 		return FALSE;
 	}
 
+	ump_cache_operations_control(UMP_CACHE_OP_START);
+	ump_switch_hw_usage_secure_id(armsoc_bo_name(priv->bo), UMP_USED_BY_CPU);
+	ump_cache_operations_control(UMP_CACHE_OP_FINISH);
+
 	return TRUE;
 }
 
@@ -359,6 +366,10 @@ ARMSOCFinishAccess(PixmapPtr pPixmap, int index)
 	 * do a more precise cache flush..
 	 */
 	armsoc_bo_cpu_fini(priv->bo, idx2op(index));
+
+	ump_cache_operations_control(UMP_CACHE_OP_START);
+	ump_switch_hw_usage_secure_id(armsoc_bo_name(priv->bo), UMP_USED_BY_CPU);
+	ump_cache_operations_control(UMP_CACHE_OP_FINISH);
 }
 
 /**

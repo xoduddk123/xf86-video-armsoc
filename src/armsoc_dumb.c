@@ -244,6 +244,12 @@ int armsoc_bo_get_name(struct armsoc_bo *bo, uint32_t *name)
 	return 0;
 }
 
+uint32_t armsoc_bo_name(struct armsoc_bo *bo)
+{
+	assert(bo->refcnt > 0);
+	return bo->name;
+}
+
 uint32_t armsoc_bo_handle(struct armsoc_bo *bo)
 {
 	assert(bo->refcnt > 0);

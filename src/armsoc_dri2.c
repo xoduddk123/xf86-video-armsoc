@@ -30,6 +30,9 @@
 #include "config.h"
 #endif
 
+#include <ump/ump.h>
+#include <ump/ump_ref_drv.h>
+
 #include "armsoc_driver.h"
 #include "armsoc_exa.h"
 
@@ -324,6 +327,10 @@ ARMSOCDRI2CopyRegion(DrawablePtr pDraw, RegionPtr pRegion,
 	if (!pGC)
 		return;
 
+	ump_cache_operations_control(UMP_CACHE_OP_START);
+	ump_switch_hw_usage_secure_id(pSrcBuffer->name, UMP_USED_BY_CPU);
+	ump_cache_operations_control(UMP_CACHE_OP_FINISH);
+
 	pCopyClip = REGION_CREATE(pScreen, NULL, 0);
 	RegionCopy(pCopyClip, pRegion);
 	(*pGC->funcs->ChangeClip) (pGC, CT_REGION, pCopyClip, 0);
@@ -341,6 +348,10 @@ ARMSOCDRI2CopyRegion(DrawablePtr pDraw, RegionPtr pRegion,
 			0, 0, pDraw->width, pDraw->height, 0, 0);
 
 	FreeScratchGC(pGC);
+	ump_cache_operations_control(UMP_CACHE_OP_START);
+	ump_switch_hw_usage_secure_id(pSrcBuffer->name, UMP_USED_BY_MALI);
+	ump_cache_operations_control(UMP_CACHE_OP_FINISH);
+
 }
 
 /**
