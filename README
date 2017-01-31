@@ -25,3 +25,7 @@ You can also copy src/drmmode_template into src/drmmode_<yourdrivername> and bui
 $ ./configure --with-drmmode=<yourdrivername>
 
 
+
+-------------------------------------------
+./configure XORG_DRIVER_CHECK() 주석처리
+./configure --with-drmmode=exynos
